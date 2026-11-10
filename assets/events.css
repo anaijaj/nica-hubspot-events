@@ -1,0 +1,95 @@
+/* NICA HubSpot Events. Override with CSS variables, e.g. .nica-events{--nica-accent:#e4002b} */
+.nica-events,
+.nica-single {
+	--nica-accent: #0b5cff;
+	--nica-accent-ink: #fff;
+	--nica-ink: #14181f;
+	--nica-muted: #5b6472;
+	--nica-line: #e3e6eb;
+	--nica-bg: #fff;
+	--nica-soft: #f4f6f9;
+	--nica-radius: 12px;
+	color: var(--nica-ink);
+}
+
+/* ---------- Listing ---------- */
+.nica-events {
+	--nica-cols: 3;
+	display: grid; gap: 20px; margin: 1.5em 0;
+	/* up to --nica-cols columns, but never narrower than 260px, so it also works in a narrow content area */
+	grid-template-columns: repeat(auto-fill, minmax(min(100%, max(260px, calc((100% - 20px * (var(--nica-cols) - 1)) / var(--nica-cols)))), 1fr));
+}
+.nica-events-empty { padding: 1.5em; background: #f4f6f9; border-radius: 12px; text-align: center; }
+
+.nica-card {
+	display: flex; flex-direction: column; gap: 6px;
+	background: var(--nica-bg); border: 1px solid var(--nica-line); border-radius: var(--nica-radius);
+	padding: 20px; box-shadow: 0 1px 2px rgba(20, 24, 31, .05);
+}
+.nica-card--past { opacity: .85; }
+.nica-card p { margin: 0; }
+.nica-card__date { font-weight: 700; font-size: 1.05em; }
+.nica-card__venue { display: flex; align-items: center; gap: 6px; color: var(--nica-muted); }
+.nica-card__venue svg, .nica-hero__meta svg { flex: none; }
+.nica-card__title { margin: 4px 0 0; font-size: 1.25em; line-height: 1.25; }
+.nica-card__title a { color: inherit; text-decoration: none; }
+.nica-card__title a:hover { text-decoration: underline; }
+.nica-card__address, .nica-card__address a { color: var(--nica-muted); font-size: .95em; }
+.nica-card__actions { display: flex; align-items: flex-end; justify-content: space-between; gap: 10px; margin-top: auto; padding-top: 14px; }
+.nica-card__buttons { display: flex; flex-wrap: wrap; gap: 8px; }
+
+/* Event type label: the standout bit */
+.nica-badge {
+	align-self: flex-start; display: inline-block;
+	background: var(--nica-accent); color: var(--nica-accent-ink);
+	font-size: .72em; font-weight: 800; letter-spacing: .08em; text-transform: uppercase;
+	padding: 5px 10px; border-radius: 999px; margin-bottom: 4px;
+}
+.nica-badge--hero { margin-bottom: 14px; }
+
+/* ---------- Buttons ---------- */
+.nica-btn {
+	display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+	min-height: 40px; padding: 8px 16px; border-radius: 8px; border: 2px solid var(--nica-accent);
+	font: inherit; font-weight: 700; font-size: .92em; line-height: 1.2; text-decoration: none; cursor: pointer; white-space: nowrap;
+	transition: background-color .15s, color .15s;
+}
+.nica-btn--primary { background: var(--nica-accent); color: var(--nica-accent-ink); }
+.nica-btn--primary:hover { filter: brightness(.9); color: var(--nica-accent-ink); }
+.nica-btn--secondary { background: transparent; color: var(--nica-accent); }
+.nica-btn--secondary:hover { background: var(--nica-accent); color: var(--nica-accent-ink); }
+.nica-btn--ghost { background: transparent; border-color: transparent; color: var(--nica-ink); text-decoration: underline; padding-left: 8px; padding-right: 8px; }
+.nica-btn:focus-visible, .nica-share:focus-visible { outline: 3px solid var(--nica-accent); outline-offset: 2px; }
+
+.nica-share {
+	flex: none; width: 40px; height: 40px; display: inline-flex; align-items: center; justify-content: center;
+	background: transparent; border: 1px solid var(--nica-line); border-radius: 50%; color: var(--nica-ink); cursor: pointer;
+}
+.nica-share:hover { background: var(--nica-soft); }
+.nica-share.is-copied, .nica-btn.is-copied { border-color: #1a7f37; color: #1a7f37; }
+
+/* ---------- Single event ---------- */
+.nica-single { background: var(--nica-bg); }
+.nica-hero { background: #14181f; color: #fff; position: relative; }
+.nica-hero--image { background-size: cover; background-position: center; }
+.nica-hero--image::before { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(10,12,16,.62), rgba(10,12,16,.82)); }
+.nica-hero__inner { position: relative; max-width: 1100px; margin: 0 auto; padding: clamp(48px, 10vw, 110px) 20px; }
+.nica-hero__title { color: #fff; margin: 0 0 14px; font-size: clamp(2rem, 5vw, 3.2rem); line-height: 1.1; }
+.nica-hero__meta { display: flex; align-items: center; gap: 8px; margin: 4px 0; font-size: 1.1em; color: #fff; }
+.nica-hero__address { margin: 0 0 0 26px; color: rgba(255,255,255,.8); }
+
+.nica-single__wrap { max-width: 1100px; margin: 0 auto; padding: 24px 20px 56px; }
+.nica-back { margin: 0 0 12px; }
+.nica-actions { display: flex; flex-wrap: wrap; gap: 10px; padding-bottom: 24px; border-bottom: 1px solid var(--nica-line); margin-bottom: 28px; }
+.nica-single__grid { display: grid; gap: 32px; grid-template-columns: 1fr; }
+@media (min-width: 860px) { .nica-single__grid { grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr); } }
+.nica-h2 { margin: 0 0 12px; font-size: 1.5em; }
+.nica-description { line-height: 1.65; }
+.nica-panel { background: var(--nica-soft); border-radius: var(--nica-radius); padding: 20px; margin-bottom: 16px; }
+.nica-facts { margin: 0; }
+.nica-facts dt { font-size: .75em; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--nica-muted); margin-top: 14px; }
+.nica-facts dt:first-child { margin-top: 0; }
+.nica-facts dd { margin: 4px 0 0; }
+.nica-map { border-radius: var(--nica-radius); overflow: hidden; border: 1px solid var(--nica-line); margin-bottom: 16px; }
+.nica-map iframe { display: block; width: 100%; height: 280px; border: 0; }
+.nica-share-wide { width: 100%; border-color: var(--nica-line); text-decoration: none; }
