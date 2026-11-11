@@ -81,10 +81,35 @@ The workflow file was checked for valid JSON and its site-picking logic was run 
 
 Plugin vs n8n for the later headless move: the HubSpot-to-site step is what n8n replaces. The WordPress plugin is just the receiver. When the sites become headless, n8n calls the new site's rebuild/revalidate endpoint instead.
 
-## 7. Known caveats
+## 7. Updating all sites from GitHub
+
+The plugin includes the Plugin Update Checker library (MIT). Once a site knows your repo, WordPress shows **Update available** on the Plugins page whenever you publish a new GitHub **Release**. No re-uploading.
+
+**One-time setup per site** (this version has to be installed by hand once, because older copies don't have the updater):
+
+```php
+define( 'NICA_HSE_GITHUB_REPO', 'https://github.com/YOUR-ORG/nica-hubspot-events/' );
+define( 'NICA_HSE_GITHUB_TOKEN', 'github_pat_...' ); // private repo only
+```
+
+For a private repo, create a fine-grained GitHub token limited to this one repo with **Contents: Read-only**, and use the same token on every site.
+
+Then on the Plugins page click **Enable auto-updates** on the plugin row if you want sites to update themselves.
+
+**Each time you change the plugin:**
+
+1. Edit the files. Raise the version in `nica-hubspot-events.php` in **both** places (the `Version:` header and `NICA_HSE_VERSION`), for example `0.2.0` to `0.2.1`.
+2. `git add . && git commit -m "what changed" && git push`
+3. GitHub > your repo > **Releases** > **Draft a new release**. Create a new tag that matches the version (`v0.2.1`), then **Publish release**.
+4. Sites pick it up on their next update check (within about 12 hours). To see it right away: Dashboard > Updates > **Check again**.
+
+A push alone does nothing; the **Release** is what sites look for. If the version number doesn't go up, WordPress sees no update.
+
+## 8. Known caveats
 
 - The embedded map uses Google's keyless `maps?q=...&output=embed` URL. It isn't an official API and could change. "Get directions" is the stable fallback; the Maps Embed API (free, needs a key) is the upgrade.
 - The Featured Image is copied into the Media Library (HubSpot file links can expire). If the Service Key lacks file access, the event still publishes without the picture and a warning shows.
+- The GitHub updater was checked to load and initialise inside WordPress, but a real update from your repo has not been tested (no GitHub access from where this was built). Try it on one site first.
 - Tested on real WordPress against a mock HubSpot (paging, league filter, idempotency, unpublish/republish, zero-result guard, REST endpoint, image copy, pretty URLs, block theme). **Not tested against your real HubSpot or n8n**, so run Test connection first.
 
 ## Tests

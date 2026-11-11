@@ -23,6 +23,23 @@ require_once NICA_HSE_DIR . 'includes/class-nica-hse-settings.php';
 require_once NICA_HSE_DIR . 'includes/class-nica-hse-render.php';
 require_once NICA_HSE_DIR . 'includes/class-nica-hse-sync.php';
 
+/*
+ * Updates from GitHub. Put your repo in wp-config.php (or edit the default here):
+ *   define( 'NICA_HSE_GITHUB_REPO', 'https://github.com/YOUR-ORG/nica-hubspot-events/' );
+ *   define( 'NICA_HSE_GITHUB_TOKEN', 'read-only token' ); // only for a private repo
+ * Sites then show "Update available" whenever a new Release (tag) is published on GitHub.
+ */
+if ( ! defined( 'NICA_HSE_GITHUB_REPO' ) ) {
+	define( 'NICA_HSE_GITHUB_REPO', '' );
+}
+if ( '' !== NICA_HSE_GITHUB_REPO && ( is_admin() || wp_doing_cron() || defined( 'WP_CLI' ) ) ) {
+	require_once NICA_HSE_DIR . 'lib/plugin-update-checker/plugin-update-checker.php';
+	$nica_hse_updater = \YahnisElsts\PluginUpdateChecker\v6\PucFactory::buildUpdateChecker( NICA_HSE_GITHUB_REPO, NICA_HSE_FILE, 'nica-hubspot-events' );
+	if ( defined( 'NICA_HSE_GITHUB_TOKEN' ) && '' !== NICA_HSE_GITHUB_TOKEN ) {
+		$nica_hse_updater->setAuthentication( NICA_HSE_GITHUB_TOKEN );
+	}
+}
+
 NICA_HSE_Settings::init();
 NICA_HSE_Render::init();
 NICA_HSE_Sync::init();
