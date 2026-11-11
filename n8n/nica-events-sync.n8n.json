@@ -1,0 +1,119 @@
+{
+  "name": "NICA league events: sync league sites",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "nica-events-sync",
+        "options": {}
+      },
+      "id": "n1",
+      "name": "HubSpot webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "webhookId": "nica-events-sync"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 15
+            }
+          ]
+        }
+      },
+      "id": "n2",
+      "name": "Every 15 minutes (safety net)",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// One entry per league site. League = the HubSpot League dropdown INTERNAL value for that site.\n// Keep real secrets out of shared copies of this workflow: use n8n Variables/Credentials once you are set up.\nconst SITES = [\n  { league: 'florida', url: 'https://florida.example.org', secret: 'PASTE-SYNC-SECRET-FOR-THIS-SITE' },\n  // { league: 'georgia', url: 'https://georgia.example.org', secret: '...' },\n];\n\n// If HubSpot told us which league changed, only poke that site. Otherwise (schedule) poke all of them.\nconst body = $input.first().json.body || {};\nconst only = (body.league || '').toString().trim().toLowerCase();\nconst targets = only ? SITES.filter(s => s.league.toLowerCase() === only) : SITES;\n\nreturn targets.map(s => ({ json: {\n  league: s.league,\n  syncUrl: s.url.replace(/\\/$/, '') + '/wp-json/nica-hse/v1/sync',\n  secret: s.secret,\n}}));"
+      },
+      "id": "n3",
+      "name": "Which sites?",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        300,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $json.syncUrl }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-NICA-Secret",
+              "value": "={{ $json.secret }}"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 120000
+        }
+      },
+      "id": "n4",
+      "name": "Sync league site",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        600,
+        100
+      ],
+      "onError": "continueRegularOutput"
+    }
+  ],
+  "connections": {
+    "HubSpot webhook": {
+      "main": [
+        [
+          {
+            "node": "Which sites?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Every 15 minutes (safety net)": {
+      "main": [
+        [
+          {
+            "node": "Which sites?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Which sites?": {
+      "main": [
+        [
+          {
+            "node": "Sync league site",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

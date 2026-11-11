@@ -135,6 +135,19 @@ final class NICA_HSE_Util {
 		return $with_year ? $out . ', ' . $s->format( 'Y' ) : $out;
 	}
 
+	/** "08/22/2026 — 08/23/2026" (or just one date for a one-day event). */
+	public static function format_date_numeric( $start, $end = '' ) {
+		$s = self::dt( $start );
+		if ( ! $s ) {
+			return '';
+		}
+		$e = self::dt( $end );
+		if ( ! $e || $e <= $s ) {
+			return $s->format( 'm/d/Y' );
+		}
+		return $s->format( 'm/d/Y' ) . " \u{2014} " . $e->format( 'm/d/Y' );
+	}
+
 	/** True when the event's last day is before $today (all Y-m-d). */
 	public static function is_past( $start, $end, $today ) {
 		$last = '' !== (string) $end ? $end : $start;
@@ -279,17 +292,33 @@ final class NICA_HSE_Util {
 	}
 
 	/**
-	 * Buttons for an event. Upcoming events lead with Register/Volunteer/Flyer;
-	 * finished events lead with Results/Photos. Returns [ [label, url], ... ].
+	 * Buttons for an event: every link that exists, as [ label, url, kind ].
+	 * Upcoming events lead with Register / Volunteer; finished events lead with Results / Photos.
+	 * kind is 'download' for the flyer and 'external' for everything else (used for the icon).
 	 */
 	public static function buttons( array $d, $is_past ) {
-		$order = $is_past
-			? array( 'results' => 'Results', 'photos' => 'Photos', 'flyer' => 'Event flyer' )
-			: array( 'registration' => 'Register', 'volunteer' => 'Volunteer', 'flyer' => 'Event flyer' );
-		$out = array();
-		foreach ( $order as $key => $label ) {
+		$upcoming = array(
+			'registration' => array( 'Register', 'external' ),
+			'volunteer'    => array( 'Volunteer', 'external' ),
+			'flyer'        => array( 'Event Flyer', 'download' ),
+			'photos'       => array( 'Photos', 'external' ),
+			'results'      => array( 'Results', 'external' ),
+		);
+		$past = array(
+			'results'      => array( 'Results', 'external' ),
+			'photos'       => array( 'Photos', 'external' ),
+			'flyer'        => array( 'Event Flyer', 'download' ),
+			'registration' => array( 'Register', 'external' ),
+			'volunteer'    => array( 'Volunteer', 'external' ),
+		);
+		$order = $is_past ? $past : $upcoming;
+		$out   = array();
+		foreach ( $order as $key => $meta ) {
+			if ( $is_past && in_array( $key, array( 'registration', 'volunteer' ), true ) ) {
+				continue; // sign-ups for an event that already happened are just noise.
+			}
 			if ( ! empty( $d[ $key ] ) ) {
-				$out[] = array( $label, $d[ $key ] );
+				$out[] = array( $meta[0], $d[ $key ], $meta[1] );
 			}
 		}
 		return $out;

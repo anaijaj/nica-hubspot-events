@@ -10,38 +10,31 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$dates    = NICA_HSE_Util::format_date_range( $d['start'], $d['end'], $d['is_past'] );
+$dates    = NICA_HSE_Util::format_date_numeric( $d['start'], $d['end'] );
+$where    = trim( $d['venue_name'] . ( '' !== $d['venue_name'] && '' !== $d['venue_address'] ? ', ' : '' ) . $d['venue_address'] );
 $maps_url = NICA_HSE_Util::maps_link( $d['venue_address'], $d['venue_name'] );
 ?>
 <article class="nica-card<?php echo $d['is_past'] ? ' nica-card--past' : ''; ?>">
-	<?php if ( '' !== $d['type'] ) : ?>
-		<span class="nica-badge"><?php echo esc_html( $d['type'] ); ?></span>
-	<?php endif; ?>
-
-	<p class="nica-card__date"><?php echo esc_html( $dates ); ?></p>
-
-	<?php if ( '' !== $d['venue_name'] ) : ?>
-		<p class="nica-card__venue"><?php echo NICA_HSE_Render::icon( 'pin' ); // phpcs:ignore WordPress.Security.EscapeOutput ?> <span><?php echo esc_html( $d['venue_name'] ); ?></span></p>
-	<?php endif; ?>
+	<div class="nica-card__top">
+		<p class="nica-card__date"><?php echo esc_html( $dates ); ?></p>
+		<?php if ( '' !== $d['type'] ) : ?>
+			<span class="nica-badge"><?php echo esc_html( $d['type'] ); ?></span>
+		<?php endif; ?>
+	</div>
 
 	<h3 class="nica-card__title"><a href="<?php echo esc_url( $d['url'] ); ?>"><?php echo esc_html( $d['title'] ); ?></a></h3>
 
-	<?php if ( '' !== $d['venue_address'] ) : ?>
-		<p class="nica-card__address">
+	<?php if ( '' !== $where ) : ?>
+		<p class="nica-card__where">
 			<?php if ( '' !== $maps_url ) : ?>
-				<a href="<?php echo esc_url( $maps_url ); ?>" target="_blank" rel="noopener noreferrer"><?php echo esc_html( $d['venue_address'] ); ?></a>
+				<a href="<?php echo esc_url( $maps_url ); ?>" target="_blank" rel="noopener noreferrer"><?php echo esc_html( $where ); ?></a>
 			<?php else : ?>
-				<?php echo esc_html( $d['venue_address'] ); ?>
+				<?php echo esc_html( $where ); ?>
 			<?php endif; ?>
 		</p>
 	<?php endif; ?>
 
-	<div class="nica-card__actions">
-		<div class="nica-card__buttons">
-			<?php echo NICA_HSE_Render::buttons_html( $d, $d['url'] ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
-		</div>
-		<button type="button" class="nica-share" data-nica-share data-url="<?php echo esc_url( $d['url'] ); ?>" data-title="<?php echo esc_attr( $d['title'] ); ?>" aria-label="<?php echo esc_attr( 'Share ' . $d['title'] ); ?>">
-			<?php echo NICA_HSE_Render::icon( 'share' ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
-		</button>
+	<div class="nica-card__buttons">
+		<?php echo NICA_HSE_Render::buttons_html( $d, $d['url'] ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
 	</div>
 </article>

@@ -15,10 +15,24 @@ final class NICA_HSE_Render {
 
 	public static function init() {
 		add_action( 'init', array( __CLASS__, 'register_post_type' ) );
+		add_action( 'init', array( __CLASS__, 'maybe_flush' ), 99 );
 		add_shortcode( 'nica_events', array( __CLASS__, 'shortcode' ) );
 		add_filter( 'template_include', array( __CLASS__, 'template' ) );
 		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'maybe_enqueue' ) );
 		add_action( 'add_meta_boxes', array( __CLASS__, 'metabox' ) );
+	}
+
+	/** URL base for event pages: /events/event-title/. Filterable with nica_hse_rewrite_slug. */
+	public static function slug() {
+		return sanitize_title( apply_filters( 'nica_hse_rewrite_slug', 'events' ) );
+	}
+
+	/** Rewrites are flushed once whenever the slug changes, so nobody has to re-save permalinks. */
+	public static function maybe_flush() {
+		if ( get_option( 'nica_hse_slug' ) !== self::slug() ) {
+			flush_rewrite_rules( false );
+			update_option( 'nica_hse_slug', self::slug(), false );
+		}
 	}
 
 	public static function register_post_type() {
@@ -36,7 +50,7 @@ final class NICA_HSE_Render {
 				'menu_icon'    => 'dashicons-calendar-alt',
 				'supports'     => array( 'title', 'thumbnail' ),
 				'rewrite'      => array(
-					'slug'       => apply_filters( 'nica_hse_rewrite_slug', 'league-event' ),
+					'slug'       => self::slug(),
 					'with_front' => false,
 				),
 			)
@@ -122,22 +136,25 @@ final class NICA_HSE_Render {
 		$icons = array(
 			'pin'      => '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M12 21s-6.5-5.7-6.5-11a6.5 6.5 0 0 1 13 0c0 5.3-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.4" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>',
 			'calendar' => '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><rect x="3.5" y="5" width="17" height="15" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M3.5 10h17M8 3v4M16 3v4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>',
+			'download' => '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" d="M12 4v11m0 0l-4-4m4 4l4-4M5 20h14"/></svg>',
+			'external' => '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>',
 			'share'    => '<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5.5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="18.5" r="2.5"/><path d="M8.2 10.8l7.6-4M8.2 13.2l7.6 4"/></g></svg>',
 		);
 		return isset( $icons[ $name ] ) ? $icons[ $name ] : '';
 	}
 
-	/** Buttons as HTML. The first one is the filled (primary) button. */
+	/**
+	 * Buttons as HTML. They carry the site's own button class (leaguePrimaryBtn), so each league's
+	 * colours and button style apply. nica-btn only adds a safe fallback look.
+	 */
 	public static function buttons_html( array $d, $with_details_url = '' ) {
-		$buttons = NICA_HSE_Util::buttons( $d, $d['is_past'] );
-		$html    = '';
-		foreach ( $buttons as $i => $b ) {
-			$class = 0 === $i ? 'nica-btn nica-btn--primary' : 'nica-btn nica-btn--secondary';
-			$html .= '<a class="' . esc_attr( $class ) . '" href="' . esc_url( $b[1] ) . '" target="_blank" rel="noopener noreferrer">' . esc_html( $b[0] ) . '</a>';
+		$html = '';
+		foreach ( NICA_HSE_Util::buttons( $d, $d['is_past'] ) as $b ) {
+			$html .= '<a class="leaguePrimaryBtn nica-btn" href="' . esc_url( $b[1] ) . '" target="_blank" rel="noopener noreferrer">'
+				. esc_html( $b[0] ) . ' ' . self::icon( $b[2] ) . '</a>'; // phpcs:ignore WordPress.Security.EscapeOutput
 		}
 		if ( '' !== $with_details_url ) {
-			$class = $buttons ? 'nica-btn nica-btn--ghost' : 'nica-btn nica-btn--primary';
-			$html .= '<a class="' . esc_attr( $class ) . '" href="' . esc_url( $with_details_url ) . '">Learn more</a>';
+			$html .= '<a class="leaguePrimaryBtn nica-btn" href="' . esc_url( $with_details_url ) . '">Learn More</a>';
 		}
 		return $html;
 	}
@@ -189,7 +206,7 @@ final class NICA_HSE_Render {
 	}
 
 	/**
-	 * [nica_events show="upcoming|past|all" limit="-1" type="" columns="3"]
+	 * [nica_events show="upcoming|past|all" limit="-1" type="" columns="1"]
 	 * Shows this site's events (the sync only copies this site's league).
 	 */
 	public static function shortcode( $atts ) {
@@ -199,7 +216,7 @@ final class NICA_HSE_Render {
 				'show'    => 'upcoming',
 				'limit'   => -1,
 				'type'    => '',
-				'columns' => 3,
+				'columns' => 1,
 			),
 			$atts,
 			'nica_events'

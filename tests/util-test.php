@@ -29,6 +29,11 @@ eq( 'year', $U::format_date_range( '2026-08-22', '2026-08-23', true ), "August 2
 eq( 'cross year', $U::format_date_range( '2026-12-30', '2027-01-02' ), "December 30, 2026 $d January 2, 2027" );
 eq( 'bad start', $U::format_date_range( 'x' ), '' );
 
+// numeric
+eq( 'numeric range', $U::format_date_numeric( '2026-08-22', '2026-08-23' ), "08/22/2026 \u{2014} 08/23/2026" );
+eq( 'numeric single', $U::format_date_numeric( '2026-08-22', '2026-08-22' ), '08/22/2026' );
+eq( 'numeric none', $U::format_date_numeric( 'x' ), '' );
+
 // past
 eq( 'past', $U::is_past( '2026-08-01', '2026-08-02', '2026-08-03' ), true );
 eq( 'last day is today', $U::is_past( '2026-08-01', '2026-08-03', '2026-08-03' ), false );
@@ -99,11 +104,19 @@ $rec5 = $rec; $rec5['properties']['featured_image'] = 'javascript:1';
 eq( 'image bad', $U::record_to_event( $rec5, $map )['image_ref'], '' );
 eq( 'unknown type value', $U::record_to_event( $rec, $map, array() )['type_label'], 'race' );
 
-// buttons
+// numeric dates (card design)
+eq( 'numeric range', $U::format_date_numeric( '2026-08-22', '2026-08-23' ), "08/22/2026 \u{2014} 08/23/2026" );
+eq( 'numeric single', $U::format_date_numeric( '2026-08-22', '2026-08-22' ), '08/22/2026' );
+eq( 'numeric no end', $U::format_date_numeric( '2026-08-22' ), '08/22/2026' );
+eq( 'numeric bad', $U::format_date_numeric( 'x' ), '' );
+
+// buttons: every link that exists; order and sign-up buttons depend on past/upcoming
 $all = array( 'registration' => 'r', 'volunteer' => 'v', 'flyer' => 'f', 'results' => 'x', 'photos' => 'p' );
-eq( 'upcoming', array_column( $U::buttons( $all, false ), 0 ), array( 'Register', 'Volunteer', 'Event flyer' ) );
-eq( 'past', array_column( $U::buttons( $all, true ), 0 ), array( 'Results', 'Photos', 'Event flyer' ) );
-eq( 'no reg', array_column( $U::buttons( array( 'volunteer' => 'v', 'flyer' => 'f' ), false ), 0 ), array( 'Volunteer', 'Event flyer' ) );
+eq( 'upcoming', array_column( $U::buttons( $all, false ), 0 ), array( 'Register', 'Volunteer', 'Event Flyer', 'Photos', 'Results' ) );
+eq( 'past hides sign-ups', array_column( $U::buttons( $all, true ), 0 ), array( 'Results', 'Photos', 'Event Flyer' ) );
+eq( 'no reg', array_column( $U::buttons( array( 'volunteer' => 'v', 'flyer' => 'f' ), false ), 0 ), array( 'Volunteer', 'Event Flyer' ) );
+eq( 'flyer is download', $U::buttons( array( 'flyer' => 'f' ), false )[0][2], 'download' );
+eq( 'others external', $U::buttons( array( 'photos' => 'p' ), true )[0][2], 'external' );
 eq( 'none', $U::buttons( array(), false ), array() );
 
 echo "$n checks, $fail failed\n";
