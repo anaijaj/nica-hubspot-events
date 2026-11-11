@@ -16,7 +16,7 @@ $maps_url = NICA_HSE_Util::maps_link( $d['venue_address'], $d['venue_name'] );
 ?>
 <article class="nica-card<?php echo $d['is_past'] ? ' nica-card--past' : ''; ?>">
 	<div class="nica-card__top">
-		<p class="nica-card__date"><?php echo esc_html( $dates ); ?></p>
+		<div class="nica-card__date"><?php echo esc_html( $dates ); ?></div>
 		<?php if ( '' !== $d['type'] ) : ?>
 			<span class="nica-badge"><?php echo esc_html( $d['type'] ); ?></span>
 		<?php endif; ?>
@@ -25,13 +25,13 @@ $maps_url = NICA_HSE_Util::maps_link( $d['venue_address'], $d['venue_name'] );
 	<h3 class="nica-card__title"><a href="<?php echo esc_url( $d['url'] ); ?>"><?php echo esc_html( $d['title'] ); ?></a></h3>
 
 	<?php if ( '' !== $where ) : ?>
-		<p class="nica-card__where">
+		<div class="nica-card__where">
 			<?php if ( '' !== $maps_url ) : ?>
 				<a href="<?php echo esc_url( $maps_url ); ?>" target="_blank" rel="noopener noreferrer"><?php echo esc_html( $where ); ?></a>
 			<?php else : ?>
 				<?php echo esc_html( $where ); ?>
 			<?php endif; ?>
-		</p>
+		</div>
 	<?php endif; ?>
 
 	<div class="nica-card__buttons">

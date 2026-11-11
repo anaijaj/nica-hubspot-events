@@ -2,7 +2,7 @@
 /**
  * Plugin Name: NICA HubSpot Events
  * Description: Copies this league's events from the HubSpot Events object into WordPress, with a [nica_events] listing and an auto-generated page for each event.
- * Version:     0.2.0
+ * Version:     0.2.1
  * Author:      NICA
  * Requires PHP: 7.4
  * Text Domain: nica-hubspot-events
@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'NICA_HSE_VERSION', '0.2.0' );
+define( 'NICA_HSE_VERSION', '0.2.1' );
 define( 'NICA_HSE_FILE', __FILE__ );
 define( 'NICA_HSE_DIR', plugin_dir_path( __FILE__ ) );
 define( 'NICA_HSE_URL', plugin_dir_url( __FILE__ ) );

@@ -31,7 +31,18 @@
 	border-radius: 16px; padding: clamp(24px, 4vw, 40px);
 }
 .nica-card--past { filter: saturate(.8); }
-.nica-card p { margin: 0; color: inherit; }
+.nica-card__date, .nica-card__where { margin: 0; }
+/* Themes often style p/h3/a and #id-prefixed links (e.g. "#content p a"). The card avoids <p>, and the
+   rules below pin the card's own colours and spacing so a theme's text colours can't make it unreadable. */
+.nica-events .nica-card { box-sizing: border-box; padding: clamp(24px, 4vw, 40px) !important; margin: 0 !important; }
+.nica-events .nica-card .nica-card__date,
+.nica-events .nica-card .nica-card__where,
+.nica-events .nica-card .nica-card__where a,
+.nica-events .nica-card .nica-card__title,
+.nica-events .nica-card .nica-card__title a { color: var(--nica-card-ink, #fff) !important; }
+.nica-events .nica-card .nica-card__where a { text-decoration: none !important; }
+.nica-events .nica-card .nica-card__where a:hover { text-decoration: underline !important; text-underline-offset: 4px; }
+.nica-events .nica-card .nica-badge { color: #14181f !important; }
 .nica-card__top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 12px; min-height: 36px; }
 .nica-card__date { font-size: 1.05em; letter-spacing: .01em; opacity: .95; }
 .nica-card__title { margin: 0; font-size: clamp(1.6rem, 4vw, 3rem); line-height: 1.05; overflow-wrap: break-word; font-weight: 900; text-transform: uppercase; letter-spacing: -.01em; }
