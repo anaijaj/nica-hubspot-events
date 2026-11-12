@@ -64,7 +64,7 @@ while ( have_posts() ) :
 
 				<aside class="nica-single__side">
 					<div class="nica-panel">
-						<dl class="nica-facts">
+						<!--<dl class="nica-facts">
 							<dt>Date</dt>
 							<dd><?php echo esc_html( $dates ); ?></dd>
 
@@ -90,7 +90,40 @@ while ( have_posts() ) :
 									<?php endif; ?>
 								</dd>
 							<?php endif; ?>
-						</dl>
+						</dl>-->
+						<div class="nica-facts">
+	<div class="nica-fact">
+		<div class="nica-fact__label"><?php echo NICA_HSE_Render::icon( 'calendar' ); // phpcs:ignore WordPress.Security.EscapeOutput ?> Date</div>
+		<div class="nica-fact__value"><?php echo esc_html( $dates ); ?></div>
+	</div>
+
+	<?php if ( '' !== $d['venue_name'] || '' !== $d['venue_address'] ) : ?>
+		<div class="nica-fact">
+			<div class="nica-fact__label"><?php echo NICA_HSE_Render::icon( 'pin' ); // phpcs:ignore WordPress.Security.EscapeOutput ?> Location</div>
+			<div class="nica-fact__value">
+				<?php if ( '' !== $d['venue_name'] ) : ?>
+					<strong><?php echo esc_html( $d['venue_name'] ); ?></strong><br />
+				<?php endif; ?>
+				<?php echo esc_html( $d['venue_address'] ); ?>
+				<?php if ( '' !== $maps_link ) : ?>
+					<br /><a href="<?php echo esc_url( $maps_link ); ?>" target="_blank" rel="noopener noreferrer">Get directions</a>
+				<?php endif; ?>
+			</div>
+		</div>
+	<?php endif; ?>
+
+	<?php if ( '' !== $d['host_name'] || '' !== $d['host_email'] ) : ?>
+		<div class="nica-fact">
+			<div class="nica-fact__label"><?php echo NICA_HSE_Render::icon( 'user' ); // phpcs:ignore WordPress.Security.EscapeOutput ?> Hosted by</div>
+			<div class="nica-fact__value">
+				<?php echo esc_html( $d['host_name'] ); ?>
+				<?php if ( '' !== $d['host_email'] ) : ?>
+					<br /><a href="mailto:<?php echo esc_attr( antispambot( $d['host_email'] ) ); ?>"><?php echo esc_html( antispambot( $d['host_email'] ) ); ?></a>
+				<?php endif; ?>
+			</div>
+		</div>
+	<?php endif; ?>
+</div>
 					</div>
 
 					<?php if ( '' !== $maps_embed ) : ?>

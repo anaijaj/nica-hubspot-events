@@ -298,9 +298,9 @@ final class NICA_HSE_Util {
 	 */
 	public static function buttons( array $d, $is_past ) {
 		$upcoming = array(
+			'flyer'        => array( 'Event Flyer', 'external' ),
 			'registration' => array( 'Register', 'external' ),
 			'volunteer'    => array( 'Volunteer', 'external' ),
-			'flyer'        => array( 'Event Flyer', 'download' ),
 			'photos'       => array( 'Photos', 'external' ),
 			'results'      => array( 'Results', 'external' ),
 		);

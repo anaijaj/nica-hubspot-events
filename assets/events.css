@@ -1,112 +1,326 @@
 /* NICA HubSpot Events. Override with CSS variables, e.g. .nica-events{--nica-accent:#e4002b} */
 .nica-events,
 .nica-single {
-	--nica-accent: #3272b8;
-	--nica-accent-ink: #fff;
-	--nica-ink: #14181f;
-	--nica-muted: #5b6472;
-	--nica-line: #e3e6eb;
-	--nica-bg: #fff;
-	--nica-soft: #f4f6f9;
-	--nica-radius: 12px;
-	color: var(--nica-ink);
+  --nica-accent: #3272b8;
+  --nica-accent-ink: #fff;
+  --nica-ink: #14181f;
+  --nica-muted: #5b6472;
+  --nica-line: #e3e6eb;
+  --nica-bg: #fff;
+  --nica-soft: #f4f6f9;
+  --nica-radius: 12px;
+  color: var(--nica-ink);
 }
 
 /* ---------- Listing (navy cards) ---------- */
 .nica-events {
-	--nica-cols: 1;
-	--nica-card-bg: #212d52;
-	--nica-card-ink: #fff;
-	--nica-card-btn: #3272b8;
-	--nica-card-art: none; /* e.g. url(/wp-content/uploads/tire.png) for the tyre graphic */
-	display: grid; gap: 28px; margin: 1.5em 0;
-	grid-template-columns: repeat(auto-fill, minmax(min(100%, max(300px, calc((100% - 28px * (var(--nica-cols) - 1)) / var(--nica-cols)))), 1fr));
+  --nica-cols: 1;
+  --nica-card-bg: #212d52;
+  --nica-card-ink: #fff;
+  --nica-card-btn: #3272b8;
+  --nica-card-art: none; /* e.g. url(/wp-content/uploads/tire.png) for the tyre graphic */
+  display: grid;
+  gap: 28px;
+  margin: 1.5em 0;
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(
+      min(
+        100%,
+        max(
+          300px,
+          calc((100% - 28px * (var(--nica-cols) - 1)) / var(--nica-cols))
+        )
+      ),
+      1fr
+    )
+  );
 }
-.nica-events-empty { padding: 1.5em; background: #f4f6f9; border-radius: 12px; text-align: center; }
+.nica-events-empty {
+  padding: 1.5em;
+  background: #f4f6f9;
+  border-radius: 12px;
+  text-align: center;
+}
 
 .nica-card {
-	position: relative; display: flex; flex-direction: column; gap: 8px;
-	background-color: var(--nica-card-bg); color: var(--nica-card-ink);
-	background-image: var(--nica-card-art); background-repeat: no-repeat; background-position: right 4% bottom; background-size: auto 100%;
-	border-radius: 16px; padding: clamp(24px, 4vw, 40px);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background-color: var(--nica-card-bg);
+  color: var(--nica-card-ink);
+  background-image: var(--nica-card-art);
+  background-repeat: no-repeat;
+  background-position: right 4% bottom;
+  background-size: auto 100%;
+  border-radius: 16px;
+  padding: clamp(24px, 4vw, 40px);
+  container-type: inline-size;
 }
-.nica-card--past { filter: saturate(.8); }
-.nica-card__date, .nica-card__where { margin: 0; }
+.nica-card--past {
+  filter: saturate(0.8);
+}
+.nica-card__date,
+.nica-card__where {
+  margin: 0;
+}
 /* Themes often style p/h3/a and #id-prefixed links (e.g. "#content p a"). The card avoids <p>, and the
    rules below pin the card's own colours and spacing so a theme's text colours can't make it unreadable. */
-.nica-events .nica-card { box-sizing: border-box; padding: clamp(24px, 4vw, 40px) !important; margin: 0 !important; }
+.nica-events .nica-card {
+  box-sizing: border-box;
+  padding: clamp(24px, 4vw, 40px) !important;
+  margin: 0 !important;
+}
 .nica-events .nica-card .nica-card__date,
 .nica-events .nica-card .nica-card__where,
 .nica-events .nica-card .nica-card__where a,
 .nica-events .nica-card .nica-card__title,
-.nica-events .nica-card .nica-card__title a { color: var(--nica-card-ink, #fff) !important; }
-.nica-events .nica-card .nica-card__where a { text-decoration: none !important; }
-.nica-events .nica-card .nica-card__where a:hover { text-decoration: underline !important; text-underline-offset: 4px; }
-.nica-events .nica-card .nica-badge { color: #14181f !important; }
-.nica-card__top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 12px; min-height: 36px; }
-.nica-card__date { font-size: 1.05em; letter-spacing: .01em; opacity: .95; }
-.nica-card__title { margin: 0; font-size: clamp(1.6rem, 4vw, 3rem); line-height: 1.05; overflow-wrap: break-word; font-weight: 900; text-transform: uppercase; letter-spacing: -.01em; }
-.nica-card__title a { color: inherit; text-decoration: none; }
-.nica-card__title a:hover { text-decoration: underline; text-underline-offset: 6px; }
-.nica-card__where { font-size: 1.3em; line-height: 1.35; }
-.nica-card__where a, .nica-card__where a:visited { color: inherit; text-decoration: none; }
-.nica-card__where a:hover { text-decoration: underline; text-underline-offset: 4px; }
-.nica-card__buttons { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 18px; }
-.nica-btn svg { flex: none; }
+.nica-events .nica-card .nica-card__title a {
+  color: var(--nica-card-ink, #fff) !important;
+}
+.nica-events .nica-card .nica-card__where a {
+  text-decoration: none !important;
+  font-size: 0.8em;
+}
+.nica-events .nica-card .nica-card__where a:hover {
+  text-decoration: underline !important;
+  text-underline-offset: 4px;
+}
+.nica-events .nica-card .nica-badge {
+  color: #14181f !important;
+}
+.nica-card__top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 12px;
+  min-height: 36px;
+}
+.nica-card__date {
+  /* font-size: 1.05em; */
+  letter-spacing: 0.01em;
+  opacity: 0.95;
+}
+.nica-card__title {
+  margin: 5px 0 !important;
+  line-height: 1.05 !important;
+  font-size: clamp(1.6rem, 4vw, 2rem); 
+  font-size: clamp(1.5rem, 11cqi, 2rem); 
+  overflow-wrap: anywhere;
+  text-transform: uppercase;
+}
+.nica-card__title a {
+  color: inherit;
+  text-decoration: none;
+}
+.nica-card__title a:hover {
+  text-decoration: underline;
+  text-underline-offset: 6px;
+}
+.nica-card__where {
+  font-size: 1.3em;
+  line-height: 1.35;
+}
+.nica-card__where a,
+.nica-card__where a:visited {
+  color: inherit;
+  text-decoration: none;
+}
+.nica-card__where a:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.nica-card__buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 18px;
+}
+.nica-btn svg {
+  flex: none;
+}
 
 /* Event type label: the standout bit */
 .nica-badge {
-	display: inline-block; background: #ffc400; color: #14181f;
-	font-size: .75em; font-weight: 800; letter-spacing: .1em; text-transform: uppercase;
-	padding: 6px 12px; border-radius: 999px;
+  display: inline-block;
+  background: #ffc400;
+  color: #14181f;
+  font-size: 0.75em !important;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 6px 12px !important;
+  border-radius: 999px;
 }
-.nica-badge--hero { margin-bottom: 14px; }
+.nica-badge--hero {
+  margin-bottom: 14px;
+}
 
 /* ---------- Buttons ----------
    The links also carry the site's own `leaguePrimaryBtn` class. This rule has the same specificity as
    a plain .leaguePrimaryBtn rule, so the theme's version wins when it loads later. Without one, the
    background is the league's --leaguePrimaryColor, or a blue default. */
 .nica-btn {
-	display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-	min-height: 48px; padding: 10px 22px; border-radius: 4px; border: 2px solid transparent;
-	background: var(--leaguePrimaryColor, var(--nica-accent)); color: #fff;
-	font: inherit; font-weight: 700; font-size: .92em; line-height: 1.2; text-transform: uppercase; letter-spacing: .02em;
-	text-decoration: none; cursor: pointer; white-space: nowrap; transition: filter .15s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  /* min-height: 48px; */
+  padding: 10px 22px;
+  border-radius: 4px;
+  border: 2px solid transparent;
+  background: var(--leaguePrimaryColor, var(--nica-accent));
+  color: #fff;
+  font: inherit;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  white-space: nowrap;
 }
-.nica-btn:hover { filter: brightness(1.12); color: #fff; }
-.nica-btn--ghost { background: transparent; border-color: var(--nica-line); color: var(--nica-ink); }
-.nica-btn:focus-visible, .nica-share:focus-visible { outline: 3px solid #ffc400; outline-offset: 2px; }
+.nica-btn:hover {
+  filter: brightness(1.12);
+  color: #fff;
+}
+.nica-btn--ghost {
+  background: transparent;
+  border-color: var(--nica-line);
+  color: var(--nica-ink);
+}
+.nica-btn:focus-visible,
+.nica-share:focus-visible {
+  outline: 3px solid #ffc400;
+  outline-offset: 2px;
+}
 
 .nica-share {
-	flex: none; width: 40px; height: 40px; display: inline-flex; align-items: center; justify-content: center;
-	background: transparent; border: 1px solid rgba(255,255,255,.45); border-radius: 50%; color: #fff; cursor: pointer; padding: 0;
+  flex: none;
+  width: 40px;
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  border-radius: 50%;
+  color: #fff;
+  cursor: pointer;
+  padding: 0;
 }
-.nica-share:hover { background: rgba(255,255,255,.14); }
-.nica-share.is-copied, .nica-btn.is-copied { border-color: #4ade80; color: #4ade80; }
+.nica-share:hover {
+  background: rgba(255, 255, 255, 0.14);
+}
+.nica-share.is-copied,
+.nica-btn.is-copied {
+  border-color: #4ade80;
+  color: #4ade80;
+}
 
 /* ---------- Single event ---------- */
-.nica-single { background: var(--nica-bg); }
-.nica-hero { background: #212d52; color: #fff; position: relative; }
-.nica-hero--image { background-size: cover; background-position: center; }
-.nica-hero--image::before { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(10,12,16,.62), rgba(10,12,16,.82)); }
-.nica-hero__inner { position: relative; max-width: 1100px; margin: 0 auto; padding: clamp(48px, 10vw, 110px) 20px; }
-.nica-hero__title { color: #fff; margin: 0 0 14px; font-size: clamp(2rem, 5vw, 3.2rem); line-height: 1.1; }
-.nica-hero__meta { display: flex; align-items: center; gap: 8px; margin: 4px 0; font-size: 1.1em; color: #fff; }
-.nica-hero__address { margin: 0 0 0 26px; color: rgba(255,255,255,.8); }
+.nica-single {
+  background: var(--nica-bg);
+}
+.nica-hero {
+  background: #212d52;
+  color: #fff;
+  position: relative;
+}
+.nica-hero--image {
+  background-size: cover;
+  background-position: center;
+}
+.nica-hero--image::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(10, 12, 16, 0.62),
+    rgba(10, 12, 16, 0.82)
+  );
+}
+.nica-hero { --nica-header-offset: 160px; }
+@media (max-width: 767px) { .nica-hero { --nica-header-offset: 110px; } }
+.nica-hero__inner { position: relative; max-width: 1100px; margin: 0 auto; padding: calc(var(--nica-header-offset) + 24px) 20px clamp(48px, 8vw, 90px); }
+.nica-hero__title {
+  color: #fff;
+  margin: 0 0 14px;
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  line-height: 1.1;
+}
+.nica-hero__meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 4px 0;
+  font-size: 1.1em;
+  color: #fff;
+}
+.nica-hero__address {
+  margin: 0 0 0 26px;
+  color: rgba(255, 255, 255, 0.8);
+}
 
-.nica-single__wrap { max-width: 1100px; margin: 0 auto; padding: 24px 20px 56px; }
-.nica-back { margin: 0 0 12px; }
-.nica-actions { display: flex; flex-wrap: wrap; gap: 10px; padding-bottom: 24px; border-bottom: 1px solid var(--nica-line); margin-bottom: 28px; }
-.nica-single__grid { display: grid; gap: 32px; grid-template-columns: 1fr; }
-@media (min-width: 860px) { .nica-single__grid { grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr); } }
-.nica-h2 { margin: 0 0 12px; font-size: 1.5em; }
-.nica-description { line-height: 1.65; }
-.nica-panel { background: var(--nica-soft); border-radius: var(--nica-radius); padding: 20px; margin-bottom: 16px; }
-.nica-facts { margin: 0; }
-.nica-facts dt { font-size: .75em; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--nica-muted); margin-top: 14px; }
-.nica-facts dt:first-child { margin-top: 0; }
-.nica-facts dd { margin: 4px 0 0; }
-.nica-map { border-radius: var(--nica-radius); overflow: hidden; border: 1px solid var(--nica-line); margin-bottom: 16px; }
-.nica-map iframe { display: block; width: 100%; height: 280px; border: 0; }
-.nica-share-wide { width: 100%; border-color: var(--nica-line); color: var(--nica-ink); }
-.nica-share-wide:hover { background: var(--nica-soft); }
+.nica-single__wrap {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 24px 20px 56px;
+}
+.nica-back {
+  margin: 0 0 2em;
+}
+.nica-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--nica-line);
+  margin-bottom: 28px;
+}
+.nica-single__grid {
+  display: grid;
+  gap: 32px;
+  grid-template-columns: 1fr;
+}
+@media (min-width: 860px) {
+  .nica-single__grid {
+    grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr);
+  }
+}
+.nica-h2 {
+  margin: 0 0 12px;
+  font-size: 2em;
+}
+.nica-description {
+  line-height: 1.65;
+}
+.nica-panel {
+  background: var(--nica-soft);
+  border-radius: var(--nica-radius);
+  padding: 20px;
+  margin-bottom: 16px;
+}
+.nica-fact + .nica-fact { margin-top: 18px; }
+.nica-fact__label { display: flex; align-items: center; gap: 8px; font-size: .75em; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--nica-muted); }
+.nica-fact__label svg { flex: none; }
+.nica-fact__value { margin-top: 6px; line-height: 1.45; }
+.nica-map {
+  border-radius: var(--nica-radius);
+  overflow: hidden;
+  border: 1px solid var(--nica-line);
+  margin-bottom: 16px;
+}
+.nica-map iframe {
+  display: block;
+  width: 100%;
+  height: 280px;
+  border: 0;
+}
+.nica-share-wide {
+  width: 100%;
+  border-color: var(--nica-line);
+  color: var(--nica-ink);
+}
+.nica-share-wide:hover {
+  background: var(--nica-soft);
+}
