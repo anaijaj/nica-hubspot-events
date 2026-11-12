@@ -218,6 +218,7 @@ final class NICA_HSE_Render {
 				'limit'   => -1,
 				'type'    => '',
 				'columns' => 1,
+				'filter'  => 'yes', // 'no' hides the event-type buttons.
 			),
 			$atts,
 			'nica_events'
@@ -241,11 +242,31 @@ final class NICA_HSE_Render {
 		if ( ! $ids ) {
 			return '<p class="nica-events-empty">' . esc_html( 'past' === $show ? 'No past events yet.' : 'No upcoming events right now. Check back soon!' ) . '</p>';
 		}
-		$out = '<div class="nica-events" style="--nica-cols:' . (int) $columns . '">';
-		foreach ( $ids as $id ) {
-			$out .= self::card( $id );
-		}
-		return $out . '</div>';
+		// Event types actually present in this list, in the order they first appear.
+$types = array();
+foreach ( $ids as $id ) {
+	$label = (string) get_post_meta( $id, '_nica_type', true );
+	if ( '' !== $label ) {
+		$types[ sanitize_title( $label ) ] = $label;
+	}
+}
+
+$out = '<div class="nica-events-wrap" data-nica-events>';
+if ( 'no' !== strtolower( (string) $a['filter'] ) && count( $types ) > 1 ) {
+	$out .= '<div class="nica-filters" role="group" aria-label="Filter events by type">';
+	$out .= '<button type="button" class="nica-filter" data-type="" aria-pressed="true">All</button>';
+	foreach ( $types as $slug => $label ) {
+		$out .= '<button type="button" class="nica-filter" data-type="' . esc_attr( $slug ) . '" aria-pressed="false">' . esc_html( $label ) . '</button>';
+	}
+	$out .= '</div>';
+}
+$out .= '<div class="nica-events" style="--nica-cols:' . (int) $columns . '">';
+foreach ( $ids as $id ) {
+	$out .= self::card( $id );
+}
+$out .= '</div>';
+$out .= '<div class="nica-events-none" hidden>No events of this type right now.</div>';
+return $out . '</div>';
 	}
 
 	private static function query( $which, $today, $type, $limit ) {

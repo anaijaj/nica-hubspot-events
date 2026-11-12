@@ -14,8 +14,7 @@ $dates    = NICA_HSE_Util::format_date_numeric( $d['start'], $d['end'] );
 $where    = trim( $d['venue_name'] . ( '' !== $d['venue_name'] && '' !== $d['venue_address'] ? ', ' : '' ) . $d['venue_address'] );
 $maps_url = NICA_HSE_Util::maps_link( $d['venue_address'], $d['venue_name'] );
 ?>
-<article class="nica-card<?php echo $d['is_past'] ? ' nica-card--past' : ''; ?>">
-	<div class="nica-card__top">
+<article class="nica-card<?php echo $d['is_past'] ? ' nica-card--past' : ''; ?>" data-type="<?php echo esc_attr( sanitize_title( $d['type'] ) ); ?>">	<div class="nica-card__top">
 		<div class="nica-card__date"><?php echo esc_html( $dates ); ?></div>
 		<?php if ( '' !== $d['type'] ) : ?>
 			<span class="nica-badge"><?php echo esc_html( $d['type'] ); ?></span>
