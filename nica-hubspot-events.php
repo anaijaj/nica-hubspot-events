@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'NICA_HSE_VERSION', '0.2.1' );
+define( 'NICA_HSE_VERSION', '0.2.2' );
 define( 'NICA_HSE_FILE', __FILE__ );
 define( 'NICA_HSE_DIR', plugin_dir_path( __FILE__ ) );
 define( 'NICA_HSE_URL', plugin_dir_url( __FILE__ ) );
